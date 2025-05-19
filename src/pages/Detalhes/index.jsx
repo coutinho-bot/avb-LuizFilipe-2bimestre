@@ -1,29 +1,55 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const Detalhes = () => {
-  const { codigo } = useParams();  // Pega o código do país a partir da URL
-  const [pais, setPais] = useState(null);
+  const { codigo } = useParams();  // aqui "codigo" será o CEP
+  const navigate = useNavigate();
+  const [endereco, setEndereco] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (codigo) {
-      // A URL de requisição agora está correta
-      axios.get(`https://restcountries.com/v3.1/alpha/${codigo}`)
-        .then((res) => setPais(res.data[0]))
-        .catch((err) => console.error('Erro ao buscar país:', err));
-    }
-  }, [codigo]); // Refaz a requisição sempre que o parâmetro mudar
+      setLoading(true);
+      setError(null);
 
-  if (!pais) return <p>Carregando...</p>;
+      axios.get(`https://viacep.com.br/ws/${codigo}/json/`)
+        .then(res => {
+          if (res.data.erro) {
+            setError('CEP não encontrado');
+            setEndereco(null);
+          } else {
+            setEndereco(res.data);
+          }
+          setLoading(false);
+        })
+        .catch(() => {
+          setError('Erro ao buscar CEP');
+          setLoading(false);
+        });
+    }
+  }, [codigo]);
+
+  if (loading) return <p>Carregando...</p>;
+
+  if (error) return (
+    <div className="container mx-auto p-4">
+      <button onClick={() => navigate(-1)} className="mb-4 px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">← Voltar</button>
+      <p className="text-red-600">{error}</p>
+    </div>
+  );
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">{pais.name.common}</h1>
-      <img src={pais.flags.svg} alt={pais.name.common} className="w-48 mb-4" />
-      <p><strong>Capital:</strong> {pais.capital?.[0]}</p>
-      <p><strong>Região:</strong> {pais.region}</p>
-      <p><strong>População:</strong> {pais.population.toLocaleString()}</p>
+    <div className="container mx-auto p-4 max-w-lg">
+      <button onClick={() => navigate(-1)} className="mb-4 px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">← Voltar</button>
+
+      <h1 className="text-2xl font-bold mb-4">CEP: {codigo}</h1>
+      <p><strong>Logradouro:</strong> {endereco.logradouro || '—'}</p>
+      <p><strong>Bairro:</strong> {endereco.bairro || '—'}</p>
+      <p><strong>Cidade:</strong> {endereco.localidade || '—'}</p>
+      <p><strong>Estado:</strong> {endereco.uf || '—'}</p>
+      <p><strong>Complemento:</strong> {endereco.complemento || '—'}</p>
     </div>
   );
 };

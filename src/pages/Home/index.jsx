@@ -1,35 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
-  const [countries, setCountries] = useState([]);
+  const [cep, setCep] = useState('');
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    axios.get('https://restcountries.com/v3.1/all')
-      .then(response => {
-        setCountries(response.data);
-      })
-      .catch(error => console.log(error));
-  }, []);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Limpa espaços e só permite números (você pode melhorar a validação)
+    const cepLimpo = cep.replace(/\D/g, '');
+
+    if (cepLimpo.length !== 8) {
+      alert('Por favor, digite um CEP válido com 8 números');
+      return;
+    }
+
+    // Redireciona para página de detalhes do CEP
+    navigate(`/detalhes/${cepLimpo}`);
+  };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center mb-8">Lista de Países</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {countries.map(country => (
-          <div key={country.cca3} className="bg-white shadow-lg rounded-lg p-4 text-center">
-            <Link to={`/detalhes/${country.cca3}`}>
-              <img
-                src={country.flags.png}
-                alt={country.name.common}
-                className="w-full h-32 object-contain mb-4 mx-auto"
-              />
-              <h2 className="text-xl font-semibold">{country.name.common}</h2>
-            </Link>
-          </div>
-        ))}
-      </div>
+    <div className="container mx-auto p-4 max-w-md">
+      <h1 className="text-3xl font-bold mb-8 text-center">Consulta de CEP</h1>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <input
+          type="text"
+          value={cep}
+          onChange={(e) => setCep(e.target.value)}
+          placeholder="Digite o CEP (apenas números)"
+          className="border border-gray-400 rounded px-3 py-2 text-lg"
+          maxLength={9}
+        />
+        <button
+          type="submit"
+          className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+        >
+          Buscar
+        </button>
+      </form>
     </div>
   );
 };
