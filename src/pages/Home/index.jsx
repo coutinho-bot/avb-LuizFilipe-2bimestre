@@ -32,12 +32,6 @@ const Home = () => {
           className="border border-gray-400 rounded px-3 py-2 text-lg"
           maxLength={9}
         />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-        >
-          Buscar
-        </button>
       </form>
     </div>
   );

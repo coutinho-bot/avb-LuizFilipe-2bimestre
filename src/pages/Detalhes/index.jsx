@@ -1,10 +1,9 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const Detalhes = () => {
   const { codigo } = useParams();  // aqui "codigo" será o CEP
-  const navigate = useNavigate();
   const [endereco, setEndereco] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -35,15 +34,12 @@ const Detalhes = () => {
 
   if (error) return (
     <div className="container mx-auto p-4">
-      <button onClick={() => navigate(-1)} className="mb-4 px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">← Voltar</button>
       <p className="text-red-600">{error}</p>
     </div>
   );
 
   return (
     <div className="container mx-auto p-4 max-w-lg">
-      <button onClick={() => navigate(-1)} className="mb-4 px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">← Voltar</button>
-
       <h1 className="text-2xl font-bold mb-4">CEP: {codigo}</h1>
       <p><strong>Logradouro:</strong> {endereco.logradouro || '—'}</p>
       <p><strong>Bairro:</strong> {endereco.bairro || '—'}</p>
