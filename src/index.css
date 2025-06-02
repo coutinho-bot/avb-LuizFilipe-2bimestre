@@ -24,13 +24,17 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #f7fafc; /* Um cinza claro */
-  font-family: 'Inter', sans-serif; /* Uma fonte limpa e moderna */
+  background-color: #f7fafc;
+  font-family: 'Inter', sans-serif;
+
+  display: flex;
+  flex-direction: column; /* empilha os elementos verticalmente */
+  align-items: center;    /* centraliza horizontalmente */
+  /* se quiser vertical centralizado, precisa ajustar com justify-content */
 }
+
 
 h1 {
   font-size: 3.2em;
