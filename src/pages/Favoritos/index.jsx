@@ -34,7 +34,7 @@ const Favoritos = () => {
               className="text-red-600 hover:text-red-800 text-xl"
               aria-label="Remover dos favoritos"
               title="Remover dos favoritos"
-              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+              style={{ background: 'black', border: 'none', cursor: 'pointer' }}
             >
               ⭐
             </button>
